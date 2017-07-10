@@ -17,17 +17,21 @@ namespace PdfViewerSample.Droid
         {
             public override bool OnJsAlert(Android.Webkit.WebView view, string url, string message, JsResult result)
             {
-                if (message == "MobileIventory:print")
+                if (message != "PdfViewer_app_scheme:print")
                 {
-                    (Forms.Context.GetSystemService(Android.Content.Context.PrintService) as PrintManager)?.Print(FileName, new FilePrintDocumentAdapter(FileName, Uri), null);
-
-                    return true;
+                    return base.OnJsAlert(view, url, message, result);
                 }
 
-                return base.OnJsAlert(view, url, message, result);
+                using (var printManager = Forms.Context.GetSystemService(Android.Content.Context.PrintService) as PrintManager)
+                {
+                    printManager?.Print(FileName, new FilePrintDocumentAdapter(FileName, Uri), null);
+                }
+
+                return true;
             }
 
             public string Uri { private get; set; }
+
             public string FileName { private get; set; }
         }
 
@@ -71,26 +75,28 @@ namespace PdfViewerSample.Droid
         {
             base.OnElementPropertyChanged(sender, e);
 
-            if (e.PropertyName == PdfView.UriProperty.PropertyName)
+            if (e.PropertyName != PdfView.UriProperty.PropertyName)
             {
-                var pdfView = Element as PdfView;
-
-                if (pdfView == null)
-                {
-                    return;
-                }
-
-                if (string.IsNullOrWhiteSpace(pdfView.Uri) == false)
-                {
-                    Control.SetWebChromeClient(new PdfWebChromeClient
-                    {
-                        Uri = pdfView.Uri,
-                        FileName = GetFileNameFromUri(pdfView.Uri)
-                    });
-                }
-
-                LoadFile(pdfView.Uri);
+                return;
             }
+
+            var pdfView = Element as PdfView;
+
+            if (pdfView == null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(pdfView.Uri) == false)
+            {
+                Control.SetWebChromeClient(new PdfWebChromeClient
+                {
+                    Uri = pdfView.Uri,
+                    FileName = GetFileNameFromUri(pdfView.Uri)
+                });
+            }
+
+            LoadFile(pdfView.Uri);
         }
 
         private void LoadFile(string uri)
