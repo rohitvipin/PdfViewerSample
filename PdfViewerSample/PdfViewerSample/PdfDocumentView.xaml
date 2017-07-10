@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pdfViewerSample="clr-namespace:PdfViewerSample;assembly=PdfViewerSample"
+             x:Class="PdfViewerSample.PdfDocumentView">
+    <Grid VerticalOptions="FillAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <pdfViewerSample:PdfView Grid.Row="0" x:Name="PdfDocView" VerticalOptions="FillAndExpand" />
+        <ActivityIndicator Grid.Row="0" Grid.RowSpan="2" x:Name="BusyIndicator" HorizontalOptions="Center" VerticalOptions="Center"/>
+    </Grid>
+</ContentPage>
