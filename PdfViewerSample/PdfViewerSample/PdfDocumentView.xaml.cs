@@ -9,6 +9,7 @@ namespace PdfViewerSample
         public PdfDocumentView(PdfDocEntity pdfDocEntity)
         {
             InitializeComponent();
+            Title = pdfDocEntity.FileName;
             _pdfDocEntity = pdfDocEntity;
         }
 
